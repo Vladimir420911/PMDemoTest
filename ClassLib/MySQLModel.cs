@@ -9,19 +9,19 @@ namespace ClassLib
 {
     public class MySQLModel
     {
-        private const string connString = "server=localhost;user=root;database=clients_db;password=123456;port=3307;";
+        private const string connString = "server=localhost;user=root;database=clients_db;password=123456;port=3307;"; //строка подключения к БД
 
-        public int GetClientCount()
+        public int GetClientCount() //метод для получения количества клиентов
         {
             try
             {
-                using (MySqlConnection connection = new MySqlConnection(connString))
+                using (MySqlConnection connection = new MySqlConnection(connString)) // класс для подключения к БД, using нужен чтобы убедиться, что подключение будет закрыто 
                 {
-                    connection.Open();
+                    connection.Open(); // открываем подулючение
 
-                    string query = "SELECT COUNT(id) FROM clientsinfo";
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
-                    int count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                    string query = "SELECT COUNT(id) FROM clientsinfo"; // наш запрос
+                    MySqlCommand cmd = new MySqlCommand(query, connection); // еще один класс, только для создания запроса, принимает в конструктор строку с запросом и наше соединение
+                    int count = Convert.ToInt32(cmd.ExecuteScalar().ToString()); // cmd.ExecuteScalar() используем когда запрос возвращает одно значение
 
                     return count;
                 }
@@ -45,10 +45,11 @@ namespace ClassLib
                     string query = "SELECT id, clientName, phone, mail, description, imagePath FROM clientsinfo";
                     MySqlCommand cmd = new MySqlCommand(query, connection);
 
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    using (MySqlDataReader reader = cmd.ExecuteReader()) // класс необходимый для чтения информации из БД
                     {
-                        while(reader.Read())
+                        while(reader.Read()) // пока есть что считывать
                         {
+                            // создаем нового клиента
                             Client client = new Client(reader.GetInt32(0));
                             client.Name = reader.GetString(1);
                             client.Phone = reader.GetString(2);
@@ -56,11 +57,12 @@ namespace ClassLib
                             client.Description = reader.GetString(4);
                             client.ImagePath = reader.GetString(5);
 
+                            // и добавляем в список
                             clients.Add(client);
                         }
                     }
 
-                    return clients;
+                    return clients; // вовращаем список
                 }
             }
             catch(Exception ex)
@@ -76,17 +78,17 @@ namespace ClassLib
                 using (MySqlConnection connection = new MySqlConnection(connString))
                 {
                     connection.Open();
-                    string query = "INSERT INTO clientsinfo(id, clientName, phone, mail, description, imagePath) VALUES (@id, @clientName, @phone, @mail, @description, @imagePath)";
-                
+                    string query = "INSERT INTO clientsinfo(id, clientName, phone, mail, description, imagePath) VALUES (@id, @clientName, @phone, @mail, @description, @imagePath)"; // с помощью @ обозначаем, что это параметр
+
                     MySqlCommand cmd = new MySqlCommand(query, connection);
-                    cmd.Parameters.AddWithValue("@id", client.GetId());
+                    cmd.Parameters.AddWithValue("@id", client.GetId());  // Присваиваем определенному параметру определенное значение, это гарантирует, что параметр будет передаваться правильно
                     cmd.Parameters.AddWithValue("@clientName", client.Name);
                     cmd.Parameters.AddWithValue("@phone", client.Phone);
                     cmd.Parameters.AddWithValue("@mail", client.Mail);
                     cmd.Parameters.AddWithValue("@description", client.Description);
                     cmd.Parameters.AddWithValue("@imagePath", client.ImagePath);
 
-                    cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery(); // используем когда запрос не возвращает значения
                 }
             }
             catch (Exception ex)

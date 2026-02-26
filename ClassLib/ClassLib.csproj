@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="MySQLModel.cs" />
-    <Compile Include="Order.cs" />
     <Compile Include="OrderRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

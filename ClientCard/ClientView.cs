@@ -11,7 +11,7 @@ using ClassLib;
 
 namespace ClientCard
 {
-    public partial class ClientView: UserControl
+    public partial class ClientView: UserControl // для карточки создаем библиотеку элементов управления WinForms(добавляем в нее ссылку на ClassLib, а также в сам проект форм добавляем ссылку на карточку)
     {
         private Client client_;
         public ClientView()
@@ -19,7 +19,7 @@ namespace ClientCard
             InitializeComponent();
         }
 
-        public void ShowClientInfo(Client client)
+        public void ShowClientInfo(Client client) // вызываем этот метод на основной форме
         {
             client_ = client;
 
@@ -35,12 +35,12 @@ namespace ClientCard
             return client_;
         }
 
-        private void ClientView_MouseMove(object sender, MouseEventArgs e)
+        private void ClientView_MouseMove(object sender, MouseEventArgs e) // когда мышка попадает на карточку цвет меняется на голубой(как бы выделили)
         {
             this.BackColor = Color.LightBlue;
         }
 
-        private void ClientView_MouseLeave(object sender, EventArgs e)
+        private void ClientView_MouseLeave(object sender, EventArgs e) // когда мышка покидает карточку цвет возвращается
         {
             this.BackColor = Color.White;
         }
