@@ -41,5 +41,48 @@ namespace PMDemoTest
         {
             RecordTable.DataSource = model_.GetOrdersForClient(currentClient_.GetId());
         }
+
+        private void EditOrderButton_Click(object sender, EventArgs e)
+        {
+            if (RecordTable.SelectedRows.Count > 0) // если число выбранных строк на таблице больше 0(то есть, строка выбрана)
+            {
+                var selectedRow = RecordTable.SelectedRows[0]; // сохраняем нашу выбранную строку в переменную
+                OrderRecord record = selectedRow.DataBoundItem as OrderRecord; // представляем строку как OrderRecord
+                if (record == null)
+                {
+                    return;
+                }
+                EditOrderForm editOrderForm = new EditOrderForm(record, model_);
+                if(editOrderForm.ShowDialog() == DialogResult.OK)
+                {
+                    RefreshOrders();
+                    MessageBox.Show("Order updated");
+                }
+            }
+        }
+
+        private void DeleteOrderButton_Click(object sender, EventArgs e)
+        {
+            if(RecordTable.SelectedRows.Count > 0)
+            {
+                var selectedRow = RecordTable.SelectedRows[0];
+                OrderRecord record = selectedRow.DataBoundItem as OrderRecord;
+                if (record == null)
+                {
+                    return;
+                }
+
+                try
+                {
+                    model_.DeleteOrderRecord(0/*record.GetId() <-- в record типо тоже должен быть Id свой, мне лень*/);
+                    RefreshOrders();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                
+            }
+        }
     }
 }

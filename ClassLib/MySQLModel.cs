@@ -97,6 +97,53 @@ namespace ClassLib
             }
         }
 
+        public void UpdateClient(Client client)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connString))
+                {
+                    connection.Open();
+                    string query = "UPDATE clientsinfo SET clientName = @clientName, phone = @phone, mail = @mail, description = @description, imagePath = @imagePath WHERE id = @id";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@clientName", client.Name);
+                    cmd.Parameters.AddWithValue("@phone", client.Phone);
+                    cmd.Parameters.AddWithValue("@mail", client.Mail);
+                    cmd.Parameters.AddWithValue("@description", client.Description);
+                    cmd.Parameters.AddWithValue("@imagePath", client.ImagePath);
+                    cmd.Parameters.AddWithValue("@id", client.GetId());
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void DeleteClient(int id)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connString))
+                {
+                    connection.Open();
+                    string query = "DELETE FROM clientsinfo WHERE id = @id";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public BindingList<OrderRecord> GetOrdersForClient(int id)
         {
             BindingList<OrderRecord> records = new BindingList<OrderRecord>();
@@ -158,5 +205,64 @@ namespace ClassLib
             }
 
         }
+
+
+        /// Подстава от бойкова, у OrderRecord должен быть свой id, сейчас этого нет, есть только idClient
+        /// Поэтому при попытке обновления какого то конкретного заказа, обновляются все заказы с idClient, потому что собстыенного id у этой таблицы нет
+        /// Мне лень этим заниматься кароче 
+
+
+        public void UpdateOrderRecord(int id, OrderRecord record) // добавил заглушки, чтобы код не ломался
+        {
+            Console.WriteLine(":((((((");
+        }
+
+        public void DeleteOrderRecord(int id)
+        {
+            Console.WriteLine(":((((((");
+        }
+        //public void UpdateOrderRecord(int id, OrderRecord record)
+        //{
+        //    try
+        //    {
+        //        using (MySqlConnection connection = new MySqlConnection(connString))
+        //        {
+        //            connection.Open();                                                                                       тут должен быть id самого заказаЮ а не клиента
+        //            string query = "UPDATE orders SET article = @article, date = @date, price = @price, count = @count WHERE idClient = @id"; <--, id = @id(такого поля в orders нет)
+        //            MySqlCommand cmd = new MySqlCommand(query, connection);
+        //            cmd.Parameters.AddWithValue("@article", record.NameProduct);
+        //            cmd.Parameters.AddWithValue("@date", record.SaleDate);
+        //            cmd.Parameters.AddWithValue("@price", record.Price);
+        //            cmd.Parameters.AddWithValue("@count", record.Count);
+        //            cmd.Parameters.AddWithValue("@id", id);
+
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+        //public void DeleteOrderRecord(int id)
+        //{
+        //    try
+        //    {
+        //        using (MySqlConnection connection = new MySqlConnection(connString))
+        //        {
+        //            connection.Open();
+        //            string query = "DELETE FROM orders WHERE id = @id"; <-- тут тоже кароче
+        //            MySqlCommand cmd = new MySqlCommand(query, connection);
+        //            cmd.Parameters.AddWithValue("@id", id);
+
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }

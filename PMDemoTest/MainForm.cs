@@ -1,12 +1,5 @@
 ﻿using ClassLib;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PMDemoTest
@@ -68,6 +61,39 @@ namespace PMDemoTest
             {
                 RefreshClients();
                 MessageBox.Show("New client has been added");
+            }
+        }
+
+        private void EditButton_Click(object sender, EventArgs e)
+        {
+            /// Наверно можно было сделать обновление без дополнительной формы
+            /// То есть тупо делать на AddClientForm, можно было бы сделать поле на форме типо bool isEditMode
+            /// и в зависимости от того на какую кнопку мы нажимаем эта переменная становилась бы true или false
+            /// И на форме проверялось бы состояние isEditMode, и в зависимости от этого делали бы разные вещи(редактирование вместо добавления бож)
+            /// Тогда пришлось бы заводить дополнительный конструктор(вроде так можно), потому что если мы редактируем, нам нужно получить клиента(которого мы хотим отредактировать)
+            /// А сейсас в конструкторе тока model
+            /// 
+            /// Кароче хз сделал по тупому, много повторных действий, но пофиг
+            EditClientForm editForm = new EditClientForm(Card.GetClient(), model); // форме надо скормить айди выбранного клиента(клиент в данный момент отображающийся на карточке)
+                                                                                   // и модель
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                RefreshClients();
+                MessageBox.Show("Client updated");
+            }
+        }
+
+        private void DeleteClientButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                model.DeleteClient(Card.GetClient().GetId()); // тут передаем айди клиента, для того, чтобы передать в запрос и удалить его нафиг >:)
+                RefreshClients();
+                MessageBox.Show("Client deleted");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
